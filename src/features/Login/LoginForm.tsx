@@ -20,11 +20,11 @@ export default function LoginForm() {
     try {
       const result = await login(data)
 
-      localStorage.setItem("token", result.data.token)
-      localStorage.setItem("role", result.data.role)
-      localStorage.setItem("user", JSON.stringify(result.data.avatar))
+      // localStorage.setItem("token", result.data.token)
+      // localStorage.setItem("role", result.data.role)
+      // localStorage.setItem("user", JSON.stringify(result.data.avatar))
 
-      navigate(result.data.role === "hr" ? "/hr" : "/employee")
+      // navigate(result.data.role === "hr" ? "/hr" : "/employee")
     } catch (err) {
       if (err instanceof Error) {
         alert(err.message)

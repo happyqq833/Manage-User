@@ -1,8 +1,15 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client", "vitest/globals"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "vite/client",
+      "vitest/globals"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,6 +23,10 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["./src"],
-  "files": ["./vitest.setup.ts"]
+  "include": [
+    "./src"
+  ],
+  "files": [
+    "./vitest.setup.ts"
+  ]
 }

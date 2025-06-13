@@ -1,32 +1,65 @@
-import axios from 'axios'
 
-const instance = axios.create({
-    baseURL: '/api',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-})
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import jwt_decode from "jwt-decode";
 
-instance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+const api = axios.create({
+    baseURL: "/",
+    withCredentials: true,
+});
+
+// Lưu accessToken hiện tại
+let accessToken = localStorage.getItem("accessToken");
+
+export const setAccessToken = (token: string) => {
+    accessToken = token;
+    localStorage.setItem("accessToken", token);
+};
+
+// Gắn token vào mỗi request
+api.interceptors.request.use((config) => {
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    return config
-})
+    return config;
+});
 
-instance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            console.warn('Token hết hạn hoặc không hợp lệ.')
-            localStorage.removeItem('token')
-            window.location.href = '/login'
+// Xử lý khi nhận lỗi 
+api.interceptors.response.use(
+    (res) => res,
+    async (error: AxiosError) => {
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url?.includes("/login")
+        ) {
+            originalRequest._retry = true;
+
+            try {
+                const response = await axios.post("/refresh-token", null, {
+                    withCredentials: true,
+                });
+
+                const newAccessToken = (response.data as any).accessToken;
+                setAccessToken(newAccessToken);
+
+                // Cập nhật accessToken mới vào request cũ
+                originalRequest.headers = {
+                    ...originalRequest.headers,
+                    Authorization: `Bearer ${newAccessToken}`,
+                };
+
+                // Gửi lại request cũ
+                return api(originalRequest);
+            } catch (e) {
+                localStorage.removeItem("accessToken");
+                window.location.href = "/login";
+            }
         }
-        return Promise.reject(error)
+
+        throw error;
     }
-)
+);
 
-
-export default instance
-
+export default api;
