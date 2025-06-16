@@ -55,6 +55,7 @@ export default function CoreInput<T extends FieldValues>({
 
           <TextField
             {...field}
+            value={field.value ?? ""}
             fullWidth
             className={className}
             error={!!error}

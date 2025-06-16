@@ -1,47 +1,78 @@
 import { rest } from "msw";
 
-// Danh sách user mock
+// Danh sách user mock với ID và thông tin chi tiết
 const users = [
-  { username: "hr1", password: "123", role: "hr" },
-  { username: "emp1", password: "123", role: "employee" },
+  {
+    id: "1",
+    username: "hr1",
+    password: "123",
+    role: "hr",
+    fullName: "Nguyễn Thị HR",
+    dob: "1990-01-01",
+    phone: "0909000000",
+    address: "123 Lê Lợi, Q1, TP.HCM",
+    department: "Phòng Nhân sự",
+    position: "Trưởng phòng",
+    avatar: "https://example.com/hr1.jpg",
+  },
+  {
+    id: "2",
+    username: "emp1",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn Employee",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+  },
 ];
 
-// Hàm tạo token thủ công
+// Tạo token giả lập
 function createFakeToken(payload: object): string {
-  return btoa(JSON.stringify(payload));
+  const header = { alg: "HS256", typ: "JWT" };
+  const base64Encode = (obj: object) =>
+    btoa(JSON.stringify(obj)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+
+  const encodedHeader = base64Encode(header);
+  const encodedPayload = base64Encode(payload);
+  const signature = "mocked-signature";
+
+  return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
-// Hàm decode thủ công
+// Decode token giả lập
 function decodeFakeToken(token: string): any {
   try {
-    return JSON.parse(atob(token));
+    const payload = token.split(".")[1];
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(atob(base64));
   } catch (e) {
     return null;
   }
 }
 
-// MSW Handlers
 export const handlers = [
   // Đăng nhập
   rest.post("/login", async (req, res, ctx) => {
     const { username, password } = await req.json();
-
-    const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
+    const user = users.find(u => u.username === username && u.password === password);
 
     if (!user) {
       return res(ctx.status(401), ctx.json({ message: "Sai tài khoản/mật khẩu" }));
     }
 
     const accessToken = createFakeToken({
+      id: user.id,
       username: user.username,
       role: user.role,
       exp: Date.now() + 15 * 60 * 1000, // 15 phút
     });
 
     const refreshToken = createFakeToken({
-      username: user.username,
+      id: user.id,
       exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 ngày
     });
 
@@ -61,14 +92,15 @@ export const handlers = [
     if (!cookie) return res(ctx.status(401));
 
     const decoded = decodeFakeToken(cookie);
-    if (!decoded?.username || decoded.exp < Date.now()) {
+    if (!decoded?.id || decoded.exp < Date.now()) {
       return res(ctx.status(401));
     }
 
-    const user = users.find((u) => u.username === decoded.username);
+    const user = users.find(u => u.id === decoded.id);
     if (!user) return res(ctx.status(401));
 
     const newAccessToken = createFakeToken({
+      id: user.id,
       username: user.username,
       role: user.role,
       exp: Date.now() + 15 * 60 * 1000,
@@ -77,8 +109,10 @@ export const handlers = [
     return res(ctx.json({ accessToken: newAccessToken }));
   }),
 
-  // API cần token
-  rest.get("/user-info", async (req, res, ctx) => {
+  // Trả thông tin chi tiết người dùng
+  rest.get("/user/:id", async (req, res, ctx) => {
+    const { id } = req.params;
+
     const authHeader = req.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return res(ctx.status(401));
@@ -87,15 +121,36 @@ export const handlers = [
     const token = authHeader.split(" ")[1];
     const decoded = decodeFakeToken(token);
 
-    if (!decoded?.username || decoded.exp < Date.now()) {
-      return res(ctx.status(401));
+    // if (!decoded?.id || decoded.exp < Date.now()) {
+    //   return res(ctx.status(401));
+    // }
+
+    // if (decoded.id !== id) {
+    //   return res(ctx.status(403), ctx.json({ message: "Không có quyền truy cập" }));
+    // }
+
+    const user = users.find(u => u.id === id);
+    if (!user) {
+      return res(ctx.status(404), ctx.json({ message: "Không tìm thấy người dùng" }));
     }
 
     return res(
       ctx.status(200),
       ctx.json({
-        username: decoded.username,
-        role: decoded.role,
+        message: "Lấy thông tin người dùng thành công",
+        traceId: crypto.randomUUID(),
+        data: {
+          id: user.id,
+          username: user.username,
+          fullName: user.fullName,
+          dob: user.dob,
+          phone: user.phone,
+          address: user.address,
+          department: user.department,
+          position: user.position,
+          role: user.role,
+          avatar: user.avatar,
+        }
       })
     );
   }),

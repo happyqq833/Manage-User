@@ -1,12 +1,19 @@
-import React from "react"
-import { Navigate, Outlet } from "react-router-dom"
-
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useUser } from "../context/userProvider";
 
 type Props = {
-    allowedRoles: string[]
-}
+    allowedRoles: string[];
+};
 
 export default function RoleBasedRoute({ allowedRoles }: Props) {
-    const role = localStorage.getItem("role")
-    return role && allowedRoles.includes(role) ? <Outlet /> : <Navigate to="/login" replace />
+    const { user } = useUser();
+    const role = user?.role || "";
+    console.log("user", user);
+
+    return role && allowedRoles.includes(role) ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/login" replace />
+    );
 }

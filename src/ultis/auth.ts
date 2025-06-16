@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 
-interface UserInfo {
+export interface UserInfo {
     username: string;
     role: string;
 }
@@ -19,10 +19,13 @@ export function getUserInfo(): any {
 
     try {
         const decoded = jwtDecode(token) as UserInfo;
+
         return decoded;
     } catch {
         return null;
     }
+
+
 }
 
 export function logout() {

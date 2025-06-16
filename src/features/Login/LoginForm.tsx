@@ -2,9 +2,12 @@ import React from "react"
 import { useForm } from "react-hook-form"
 import { Paper, Typography, Button, CircularProgress, Box } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import CoreInput from "../../components/CoreInput"
+import CoreInput from "../../components/atoms/CoreInput"
 import { Request } from "../../services/auth/type"
 import { login } from "../../services/auth/authService"
+import { getUserInfo } from "../../ultis/auth"
+import { u } from "msw/lib/glossary-2792c6da"
+import { useUser } from "../../context/userProvider"
 
 
 export default function LoginForm() {
@@ -15,16 +18,23 @@ export default function LoginForm() {
   } = useForm<Request>()
 
   const navigate = useNavigate()
+  const { setUser } = useUser()
 
   const onSubmit = async (data: Request) => {
     try {
       const result = await login(data)
 
-      // localStorage.setItem("token", result.data.token)
-      // localStorage.setItem("role", result.data.role)
-      // localStorage.setItem("user", JSON.stringify(result.data.avatar))
+      const userData = getUserInfo();
+      setUser(userData)
 
-      // navigate(result.data.role === "hr" ? "/hr" : "/employee")
+      const roleRedirectMap: Record<string, string> = {
+        hr: "/hr",
+        employee: "/employee"
+      }
+
+      const redirectPath = roleRedirectMap[userData.role] || "/"
+      navigate(redirectPath, { replace: true })
+
     } catch (err) {
       if (err instanceof Error) {
         alert(err.message)
