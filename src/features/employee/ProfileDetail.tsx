@@ -11,36 +11,20 @@ import {
 import { getDetailUser } from "../../services/employee/getdetail";
 import { Response, UserInfo } from "../../services/employee/getdetail/type";
 import { useSimpleApi } from "../../hooks/useGetApi";
+import { useUser } from "../../context/userProvider";
+import { useProfileDetail } from "../../components/hooks/employee/useProfileDetail";
 
 export default function ProfileDetail() {
-    const {
-        data: userDetail,
-        isLoading,
-        error,
-        errorCodes,
-        refetch
-    } = useSimpleApi(() => getDetailUser("1"), ["1"]);
 
-
-    if (isLoading) {
-        return (
-            <Box display="flex" justifyContent="center" mt={5}>
-                <CircularProgress />
-            </Box>
-        );
-    }
-
-    if (!userDetail) {
-        return (
-            <Box textAlign="center" mt={5}>
-                <Typography color="error">Không tìm thấy thông tin người dùng</Typography>
-            </Box>
-        );
-    }
-
-
+    const { userDetail, isLoading } = useProfileDetail()
     return (
         <Paper sx={{ p: 4, maxWidth: 1000, mx: "auto" }}>
+
+            {isLoading && (
+                <Box display="flex" justifyContent="center" mt={5}>
+                    <CircularProgress />
+                </Box>
+            )}
             <Box display="flex" alignItems="center" mb={4}>
                 <Avatar
                     src={userDetail?.avatar ?? "https://via.placeholder.com/80"}
@@ -81,9 +65,7 @@ export default function ProfileDetail() {
                     <Typography>
                         {userDetail?.role === "hr"
                             ? "HR"
-                            : userDetail?.role === "employee"
-                                ? "Nhân viên"
-                                : "Chưa cập nhật"}
+                            : "Chưa cập nhật"}
                     </Typography>
                 </Grid>
             </Grid>

@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 
 export interface UserInfo {
+    id: string | number;
     username: string;
     role: string;
 }

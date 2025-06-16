@@ -43,12 +43,12 @@ function createFakeToken(payload: object): string {
   return `${encodedHeader}.${encodedPayload}.${signature}`;
 }
 
-// Decode token giả lập
-function decodeFakeToken(token: string): any {
+function decodeFakeToken(token: string) {
   try {
     const payload = token.split(".")[1];
     const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(base64));
+    const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, "="); // Fix padding
+    return JSON.parse(atob(padded));
   } catch (e) {
     return null;
   }

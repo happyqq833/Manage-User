@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Toolbar } from "@mui/material";
+import { Box } from "@mui/material";
 import CommonDrawer from "../components/common/CommonDrawer";
 import CommonAppBar from "../components/common/CommonAppbar";
 import { Outlet } from "react-router-dom";
@@ -18,9 +18,8 @@ export default function HrLayout() {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    // p: 3,
-                    ml: '240px',
-                    mt: '64px'
+                    mt: 3,
+
                 }}
             >
                 <Outlet />
