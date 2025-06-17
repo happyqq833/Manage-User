@@ -7,9 +7,11 @@ import {
     Stack,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { useFormCustom } from "../../lib/form";
-import { useUser } from "../../context/userProvider";
 import { CoreAutocomplete } from "../../components/atoms/CoreAutocomplete";
+import CoreInput from "../../components/atoms/CoreInput";
+import CoreButton from "../../components/atoms/CoreButton";
+import { useCreateRequest } from "../../components/hooks/employee/useCreateRequest";
+import { RequestFormType } from "../../enums";
 
 interface User {
     id: string;
@@ -24,50 +26,16 @@ interface FormData {
     thoiGianNghi: string;
 }
 
-const loaiDonOptions = ["Nghỉ phép", "Đi trễ", "Về sớm"];
 
-const nguoiPheDuyetOptions: User[] = [
-    { id: "u001", username: "Trưởng phòng A" },
-    { id: "u002", username: "Quản lý B" },
-];
 
 export default function CreateRequest() {
-    const { user } = useUser(); // Trả về object: { id, name, avatar }
-
-    const {
-        control,
-        handleSubmit,
-        formState: { errors, isSubmitting, isValid },
-    } = useFormCustom<FormData>({
-        defaultValues: {
-            loaiDon: "",
-            nguoiPheDuyet: null,
-            lyDo: "",
-            thoiGianNghi: "",
-        },
-    });
-
-    const onSubmit = (data: FormData) => {
-        const requestData = {
-            ...data,
-            nguoiTao: {
-                id: user?.id,
-                username: user?.username,
-            },
-            thoiGianTao: new Date().toISOString(),
-        };
-
-
-        // TODO: Gửi POST đến API ở đây
-    };
-
+    const { onSubmit, control, handleSubmit, errors, isSubmitting, isValid, user } = useCreateRequest();
     return (
         <Box sx={{ maxWidth: 600, margin: "0 auto", mt: 4 }}>
             <h2>Tạo đơn yêu cầu</h2>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={2}>
-                    {/* Hiển thị người tạo */}
                     <TextField
                         label="Người tạo đơn"
                         value={user?.username || ""}
@@ -76,16 +44,15 @@ export default function CreateRequest() {
 
                     <CoreAutocomplete
                         control={control}
-                        name="loaiDon"
+                        name="name"
                         label="Loại đơn"
-                        options={loaiDonOptions}
+                        options={RequestFormType}
                         requiredMessage="Vui lòng chọn loại đơn"
-                        error={errors.loaiDon}
                     />
 
-                    <CoreAutocomplete
+                    {/* <CoreAutocomplete
                         control={control}
-                        name="nguoiPheDuyet"
+                        name="approver"
                         label="Người phê duyệt"
                         options={nguoiPheDuyetOptions}
                         requiredMessage="Vui lòng chọn người phê duyệt"
@@ -93,29 +60,19 @@ export default function CreateRequest() {
                             typeof option === "string" ? option : option?.username || ""
                         }
                         isOptionEqualToValue={(opt, val) => opt.id === val.id}
+                    /> */}
+                    <CoreInput
+                        control={control}
+                        name="reason"
+                        label="Lý do"
+                        multiline
+                        rows={3}
+                        required
                     />
 
-                    {/* Lý do */}
                     <Controller
                         control={control}
-                        name="lyDo"
-                        rules={{ required: "Vui lòng nhập lý do" }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Lý do"
-                                multiline
-                                rows={3}
-                                error={!!errors.lyDo}
-                                helperText={errors.lyDo?.message}
-                            />
-                        )}
-                    />
-
-                    {/* Thời gian nghỉ */}
-                    <Controller
-                        control={control}
-                        name="thoiGianNghi"
+                        name="createdAt"
                         rules={{ required: "Vui lòng nhập thời gian nghỉ" }}
                         render={({ field }) => (
                             <TextField
@@ -123,19 +80,19 @@ export default function CreateRequest() {
                                 type="date"
                                 label="Thời gian nghỉ"
                                 InputLabelProps={{ shrink: true }}
-                                error={!!errors.thoiGianNghi}
-                                helperText={errors.thoiGianNghi?.message}
+                                helperText={errors.createdAt?.message}
                             />
                         )}
                     />
 
-                    <Button
+
+                    <CoreButton
                         type="submit"
-                        variant="contained"
                         disabled={isSubmitting || !isValid}
                     >
-                        Gửi yêu cầu
-                    </Button>
+                        Gửi
+                    </CoreButton>
+
                 </Stack>
             </form>
         </Box>

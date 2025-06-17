@@ -9,7 +9,6 @@ type Props = {
 export default function RoleBasedRoute({ allowedRoles }: Props) {
     const { user } = useUser();
     const role = user?.role || "";
-    console.log("user", user);
 
     return role && allowedRoles.includes(role) ? (
         <Outlet />

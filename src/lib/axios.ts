@@ -7,7 +7,7 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// Lưu accessToken hiện tại
+
 let accessToken = localStorage.getItem("accessToken");
 
 export const setAccessToken = (token: string) => {
@@ -15,7 +15,6 @@ export const setAccessToken = (token: string) => {
     localStorage.setItem("accessToken", token);
 };
 
-// Gắn token vào mỗi request
 api.interceptors.request.use((config) => {
     if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -23,7 +22,7 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Xử lý khi nhận lỗi 
+
 api.interceptors.response.use(
     (res) => res,
     async (error: AxiosError) => {

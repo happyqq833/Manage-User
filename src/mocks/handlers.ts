@@ -1,4 +1,5 @@
 import { rest } from "msw";
+import { RequestForm } from "../services/employee/createRequest/type";
 
 // Danh sách user mock với ID và thông tin chi tiết
 const users = [
@@ -29,6 +30,25 @@ const users = [
     avatar: "https://example.com/emp1.jpg",
   },
 ];
+let requestForms: RequestForm[] = Array.from({ length: 23 }).map((_, index) => {
+  return {
+    id: index + 1,
+    name: `Đơn xin nghỉ phép #${index + 1}`,
+    reason: `Lý do ${index + 1}`,
+    createdAt: new Date(2025, 5, index + 1).toISOString(),
+    createdBy: {
+      id: index % 5,
+      username: `user${index % 5}`,
+      role: "employee",
+    },
+    approver: {
+      id: 99,
+      username: "boss",
+      role: "hr",
+    },
+  };
+});
+
 
 // Tạo token giả lập
 function createFakeToken(payload: object): string {
@@ -151,6 +171,54 @@ export const handlers = [
           role: user.role,
           avatar: user.avatar,
         }
+      })
+    );
+  }),
+  rest.post("/request-form", async (req, res, ctx) => {
+    const body = await req.json();
+
+    // Tạo đối tượng mới
+    const newRequest: RequestForm = {
+      id: crypto.randomUUID(), // Tạo ID ngẫu nhiên
+      name: body.name,
+      reason: body.reason,
+      createdBy: body.createdBy,
+      createdAt: new Date().toISOString(),
+      approver: body.approver ?? null,
+    };
+
+    requestForms.push(newRequest);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Tạo đơn thành công",
+        traceId: crypto.randomUUID(),
+        data: newRequest,
+      })
+    );
+  }),
+  rest.get("/request-form", (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get("page") ?? "0");
+    const size = Number(req.url.searchParams.get("size") ?? "5");
+
+    const start = page * size;
+    const end = start + size;
+
+    const pageContent = requestForms.slice(start, end);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Lấy danh sách đơn thành công",
+        traceId: crypto.randomUUID(),
+        data: {
+          content: pageContent,
+          totalElements: requestForms.length,
+          totalPages: Math.ceil(requestForms.length / size),
+          pageNumber: page,
+          pageSize: size,
+        },
       })
     );
   }),

@@ -8,10 +8,6 @@ import {
     Grid,
 } from "@mui/material";
 
-import { getDetailUser } from "../../services/employee/getdetail";
-import { Response, UserInfo } from "../../services/employee/getdetail/type";
-import { useSimpleApi } from "../../hooks/useGetApi";
-import { useUser } from "../../context/userProvider";
 import { useProfileDetail } from "../../components/hooks/employee/useProfileDetail";
 
 export default function ProfileDetail() {

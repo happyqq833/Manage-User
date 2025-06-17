@@ -1,4 +1,7 @@
 import React from 'react';
+import { ListRequest } from '../../features/employee/ListRequest';
 export default function ListRequestPage() {
-    return <h2>Danh sách đơn đã tạo</h2>;
+    return (
+        <ListRequest />
+    );
 }

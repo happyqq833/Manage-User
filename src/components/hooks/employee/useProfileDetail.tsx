@@ -1,5 +1,5 @@
 import { useUser } from "../../../context/userProvider";
-import { useSimpleApi } from "../../../hooks/useGetApi";
+import { useGetApi } from "../../../hooks/useGetApi";
 import { getDetailUser } from "../../../services/employee/getdetail";
 
 export function useProfileDetail() {
@@ -8,6 +8,6 @@ export function useProfileDetail() {
         data: userDetail,
         isLoading,
 
-    } = useSimpleApi(() => getDetailUser(user?.id as string), [user?.id as string]);
+    } = useGetApi(() => getDetailUser(user?.id as string), [user?.id as string]);
     return { userDetail, isLoading } as const
 }

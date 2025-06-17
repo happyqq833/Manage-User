@@ -8,8 +8,8 @@ export type RequestForm = {
     id: string | number
     name: string
     reason: string
-    createdBy: User
+    createdBy: User | null
     createdAt: string
-    approver: User
+    approver: User | null
 
 }

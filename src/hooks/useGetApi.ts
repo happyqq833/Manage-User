@@ -9,7 +9,7 @@ type ApiResponse<T> = {
   errorCodes?: ErrorCode[];
 };
 
-export function useSimpleApi<T>(
+export function useGetApi<T>(
   fetchFn: () => Promise<ApiResponse<T>>,
   deps: any[] = []
 ) {
