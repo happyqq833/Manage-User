@@ -10,6 +10,8 @@ import EmployeeLayout from "../layouts/EmployeeLayout";
 import ListRequestPage from "../pages/employee/ListRequestPage";
 import CreateRequestPage from "../pages/employee/CreateRequestPage";
 import ProfilePage from "../pages/employee/ProfilePage";
+import ListEmpPage from "../pages/hr/manageEmp/list";
+import { DetailEmpPage } from "../pages/hr/manageEmp/[id]";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -19,6 +21,8 @@ const AppRoutes: React.FC = () => {
                 <Route element={<RoleBasedRoute allowedRoles={["hr"]} />}>
                     <Route element={<HrLayout />}>
                         <Route path="/hr" element={<HrPage />} />
+                        <Route path="/hr/emp/list" element={<ListEmpPage />} />
+                        <Route path="/hr/emp/:id" element={<DetailEmpPage />} />
                     </Route>
                 </Route>
 

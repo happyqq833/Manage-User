@@ -29,6 +29,32 @@ const users = [
     position: "Nhân viên lập trình",
     avatar: "https://example.com/emp1.jpg",
   },
+  {
+    id: "3",
+    username: "emp2",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn He",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+  },
+  {
+    id: "4",
+    username: "emp3",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn Ha",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+  },
 ];
 let requestForms: RequestForm[] = Array.from({ length: 23 }).map((_, index) => {
   return {
@@ -222,4 +248,151 @@ export const handlers = [
       })
     );
   }),
+
+  rest.get("/users-list", (req, res, ctx) => {
+    const page = Number(req.url.searchParams.get("page") ?? "0");
+    const size = Number(req.url.searchParams.get("size") ?? "5");
+
+    // Lọc role === 'employee'
+    const employeeList = users
+      .filter((u) => u.role === "employee")
+      .map((u) => ({
+        id: u.id,
+        fullName: u.fullName,
+        address: u.address,
+        department: u.department,
+      }));
+
+    const start = page * size;
+    const end = start + size;
+    const pageContent = employeeList.slice(start, end);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Lấy danh sách employee thành công",
+        traceId: crypto.randomUUID(),
+        data: {
+          content: employeeList,
+          totalElements: employeeList.length,
+          totalPages: Math.ceil(employeeList.length / size),
+          pageNumber: page,
+          pageSize: size,
+        },
+      })
+    );
+  }),
+
+  rest.get("/user/:id", (req, res, ctx) => {
+    const { id } = req.params;
+
+    const user = users.find((u) => u.id === id);
+
+    if (!user) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: "Không tìm thấy người dùng",
+          traceId: crypto.randomUUID(),
+          data: null,
+        })
+      );
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Lấy thông tin người dùng thành công",
+        traceId: crypto.randomUUID(),
+        data: {
+          id: user.id,
+          username: user.username,
+          fullName: user.fullName,
+          dob: user.dob,
+          phone: user.phone,
+          address: user.address,
+          department: user.department,
+          position: user.position,
+          role: user.role,
+          avatar: user.avatar,
+        }
+      })
+    );
+  }),
+
+  rest.post("/users", async (req, res, ctx) => {
+    const body = await req.json();
+
+    const newUser = {
+      ...body,
+      id: crypto.randomUUID(), // tạo ID ngẫu nhiên
+    };
+
+    users.push(newUser);
+
+    return res(
+      ctx.status(201),
+      ctx.json({
+        message: "Thêm người dùng thành công",
+        traceId: crypto.randomUUID(),
+        data: newUser,
+      })
+    );
+  }),
+
+  rest.put("/users/:id", async (req, res, ctx) => {
+    const { id } = req.params;
+    const body = await req.json();
+
+    const index = users.findIndex((u) => u.id === id);
+    if (index === -1) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: "Không tìm thấy người dùng để cập nhật",
+          traceId: crypto.randomUUID(),
+          data: null,
+        })
+      );
+    }
+
+    users[index] = { ...users[index], ...body };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Cập nhật người dùng thành công",
+        traceId: crypto.randomUUID(),
+        data: users[index],
+      })
+    );
+  }),
+
+  rest.delete("/users/:id", (req, res, ctx) => {
+    const { id } = req.params;
+
+    const index = users.findIndex((u) => u.id === id);
+    if (index === -1) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: "Không tìm thấy người dùng để xóa",
+          traceId: crypto.randomUUID(),
+          data: null,
+        })
+      );
+    }
+
+    const deletedUser = users.splice(index, 1)[0];
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Xóa người dùng thành công",
+        traceId: crypto.randomUUID(),
+        data: deletedUser,
+      })
+    );
+  }),
+
 ];

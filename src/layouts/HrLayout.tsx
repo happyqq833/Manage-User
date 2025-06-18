@@ -7,7 +7,9 @@ import { Outlet } from "react-router-dom";
 export default function HrLayout() {
     const drawerItems = [
         { text: "Trang chủ", path: "/hr" },
-        { text: "Quản lý nhân viên", path: "/hr/employees" },
+        { text: "Nhân viên", path: "/hr/emp/list" },
+
+
     ];
 
     return (
