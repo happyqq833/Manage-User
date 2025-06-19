@@ -3,10 +3,11 @@ import { useFormCustom } from "../../../../lib/form";
 import { User } from "../../../../services/hr/employee/getDetail/type";
 import { useGetApi } from "../../../../hooks/useGetApi";
 import { getDetailEmp } from "../../../../services/hr/employee/getDetail";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMutationApi } from "../../../../hooks/useMutationApi";
 import { postEmp, putEmp } from "../../../../services/hr/employee/save";
 import { toast } from "react-toastify";
+import { deleteEmp } from "../../../../services/hr/employee/delete";
 
 const defaultValues: User = {
     id: '',
@@ -29,6 +30,8 @@ export const useSaveEmp = () => {
     const isView = actionType === "view";
     const isUpdate = !!id
     const navigate = useNavigate()
+    const [open, setOpen] = useState(false);
+
     const { control, handleSubmit, reset, setValue } = useFormCustom<User>({ defaultValues });
 
     const { data } = useGetApi(() => getDetailEmp({ id }), [id])
@@ -57,6 +60,14 @@ export const useSaveEmp = () => {
     const onSubmit = (data: User) => {
         mutate({ ...data })
     }
-
-    return [{ control, id, isView, isUpdate }, { handleSubmit, onSubmit }] as const;
+    const deleteFn = useMutationApi(deleteEmp, {
+        onSuccess: (res: any) => {
+            toast.success(res.message || "Xoá thành công");
+            setOpen(false);
+        },
+        onError: (err) => {
+            toast.error(err.message || "Xoá thất bại");
+        },
+    });
+    return [{ control, id, isView, isUpdate, open }, { handleSubmit, onSubmit, deleteFn, setOpen }] as const;
 }

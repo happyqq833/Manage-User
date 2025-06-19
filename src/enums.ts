@@ -13,6 +13,6 @@ export const RequestFormStatus = [
 ]
 
 export const RoleType = [
-    { name: 'Nhân viên', value: 'emploee' },
+    { name: 'Nhân viên', value: 'employee' },
     { name: 'Hr', value: 'hr' }
 ]

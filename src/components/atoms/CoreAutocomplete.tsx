@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { Controller, Control, FieldError } from "react-hook-form";
 import { find, get } from "lodash";
+import { useSearchParams } from "react-router-dom";
 
 interface OptionType {
     name: string;
@@ -27,6 +28,10 @@ export function CoreAutocomplete<T extends OptionType>({
     error,
 }: CoreAutocompleteProps<T>) {
 
+    const [searchParams] = useSearchParams();
+    const actionType = searchParams.get("actionType");
+    const isView = actionType === "view";
+
     return (
         <Controller
             control={control}
@@ -44,6 +49,7 @@ export function CoreAutocomplete<T extends OptionType>({
                         onChange={(_, newValue) => {
                             field.onChange(newValue?.value ?? null);
                         }}
+                        disabled={isView}
                         renderInput={(params) => (
                             <TextField
                                 {...params}

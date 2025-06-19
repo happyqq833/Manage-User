@@ -1,25 +1,30 @@
 import { Grid, Typography } from '@mui/material';
 
-import React from 'react';
+import React, { useState } from 'react';
 import CoreInput from '../../../components/atoms/CoreInput';
 import { useSaveEmp } from '../../../components/hooks/hr/manageEmp/useSave';
 import { CoreAutocomplete } from '../../../components/atoms/CoreAutocomplete';
 import { RoleType } from '../../../enums';
 import CoreButton from '../../../components/atoms/CoreButton';
 import { useNavigate } from 'react-router-dom';
+import { getTypeAction } from '../../../ultis/getTypeAction';
+import { useMutationApi } from '../../../hooks/useMutationApi';
+import CoreDeleteDialog from '../../../components/atoms/CoreDeleteDialog';
 
 export const SaveEmp = () => {
     const [value, handle] = useSaveEmp()
 
-    const { control, isView, id } = value
-    const { handleSubmit, onSubmit } = handle
+    const { control, isView, isUpdate, id, open } = value
+    const { handleSubmit, onSubmit, deleteFn, setOpen } = handle
     const navigate = useNavigate()
+
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4} padding={4}>
                 <Grid size={12} >
-                    <Typography align='center' >Chi tiết nhân viên</Typography>
+                    <Typography align='center' >{getTypeAction(isView, isUpdate)}</Typography>
                 </Grid>
                 <Grid size={4}>
                     <CoreInput
@@ -134,10 +139,17 @@ export const SaveEmp = () => {
                                     key={'deleteBtn'}
                                     sx={{ margin: 2, maxWidth: 120 }}
                                     variant="outlined"
-                                    onClick={() => navigate(`/hr/emp/${id}`)}
+                                    onClick={() => setOpen(true)}
                                 >
                                     Xóa
                                 </CoreButton>
+                                <CoreDeleteDialog
+                                    open={open}
+                                    onClose={() => setOpen(false)}
+                                    onConfirm={() => { deleteFn.mutate({ id }), navigate('/hr/emp/list') }}
+                                    title="Xoá nhân viên"
+                                    description={`Bạn chắc chắn muốn xoá nhân viên`}
+                                />
                             </>
 
 
@@ -157,6 +169,6 @@ export const SaveEmp = () => {
                 </Grid>
 
             </Grid>
-        </form>
+        </form >
     )
 }
