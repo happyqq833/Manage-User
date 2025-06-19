@@ -1,17 +1,59 @@
+import { useParams, useSearchParams } from "react-router-dom";
 import { useFormCustom } from "../../../../lib/form";
+import { User } from "../../../../services/hr/employee/getDetail/type";
+import { useGetApi } from "../../../../hooks/useGetApi";
+import { getDetailEmp } from "../../../../services/hr/employee/getDetail";
+import { useEffect } from "react";
+import { useMutationApi } from "../../../../hooks/useMutationApi";
+import { postEmp, putEmp } from "../../../../services/hr/employee/save";
+import { toast } from "react-toastify";
 
-const defaultValues = {
+const defaultValues: User = {
+    id: '',
+    username: '',
     fullName: '',
-    email: '',
+    dob: '',
     phone: '',
     address: '',
     department: '',
+    position: '',
+    role: 'employee',
+    avatar: '',
 }
 
 export const useSaveEmp = () => {
 
+    const [searchParams] = useSearchParams();
+    const actionType = searchParams.get("actionType");
+    const { id } = useParams<{ id: string }>();
+    const isView = actionType === "view";
+    const isUpdate = !!id
 
-    const { control, handleSubmit, reset, setValue } = useFormCustom({ defaultValues });
+    const { control, handleSubmit, reset, setValue } = useFormCustom<User>({ defaultValues });
 
-    return [{ control }, { handleSubmit }] as const;
+    const { data } = useGetApi(() => getDetailEmp({ id }), [id])
+
+    useEffect(() => {
+        if (id && data) {
+            reset({ ...data })
+        }
+    }, [id, data])
+
+    const { mutate } = useMutationApi(
+        isUpdate ? putEmp : postEmp, {
+        onSuccess: (res) => {
+            toast.success("Yêu cầu đã được tạo thành công!");
+            // navigate("/employee/requests");
+        },
+        onError: (err) => {
+            toast.error(err.message || "Đã có lỗi xảy ra, vui lòng thử lại sau!");
+
+        }
+    });
+
+    const onSubmit = (data: User) => {
+        mutate({ ...data })
+    }
+
+    return [{ control, id, isView, isUpdate }, { handleSubmit, onSubmit }] as const;
 }

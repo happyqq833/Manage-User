@@ -55,6 +55,9 @@ export const ListEmp = () => {
                     </CoreButton>
                 </div>
             </form>
+            <CoreButton sx={{ margin: 2, maxWidth: 120 }} variant="outlined" onClick={() => navigate('/hr/emp/add-new')}>
+                Thêm mới
+            </CoreButton>
             <CoreTable
                 columns={columns}
                 data={tableData?.data?.content}

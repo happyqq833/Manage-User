@@ -12,6 +12,7 @@ import CreateRequestPage from "../pages/employee/CreateRequestPage";
 import ProfilePage from "../pages/employee/ProfilePage";
 import ListEmpPage from "../pages/hr/manageEmp/list";
 import { DetailEmpPage } from "../pages/hr/manageEmp/[id]";
+import { AddNewEmpPage } from "../pages/hr/manageEmp/addNew";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -23,6 +24,8 @@ const AppRoutes: React.FC = () => {
                         <Route path="/hr" element={<HrPage />} />
                         <Route path="/hr/emp/list" element={<ListEmpPage />} />
                         <Route path="/hr/emp/:id" element={<DetailEmpPage />} />
+                        <Route path="/hr/emp/add-new" element={<AddNewEmpPage />} />
+
                     </Route>
                 </Route>
 

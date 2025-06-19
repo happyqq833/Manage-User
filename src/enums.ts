@@ -1,3 +1,4 @@
+
 export const RequestFormType = [
     { name: 'Leave', value: 'leave' },
     { name: 'Sick', value: 'sick' },
@@ -9,4 +10,9 @@ export const RequestFormStatus = [
     { name: 'Từ chối', value: 'rejected' },
     { name: 'Chờ duyệt', value: 'pending' },
     { name: 'Tất cả', value: null },
+]
+
+export const RoleType = [
+    { name: 'Nhân viên', value: 'emploee' },
+    { name: 'Hr', value: 'hr' }
 ]

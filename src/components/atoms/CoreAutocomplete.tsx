@@ -50,6 +50,7 @@ export function CoreAutocomplete<T extends OptionType>({
                                 label={label}
                                 error={!!error}
                                 helperText={error?.message}
+                                variant="standard"
                             />
                         )}
                     />
