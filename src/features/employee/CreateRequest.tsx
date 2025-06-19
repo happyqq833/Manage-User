@@ -50,17 +50,6 @@ export default function CreateRequest() {
                         requiredMessage="Vui lòng chọn loại đơn"
                     />
 
-                    {/* <CoreAutocomplete
-                        control={control}
-                        name="approver"
-                        label="Người phê duyệt"
-                        options={nguoiPheDuyetOptions}
-                        requiredMessage="Vui lòng chọn người phê duyệt"
-                        getOptionLabel={(option) =>
-                            typeof option === "string" ? option : option?.username || ""
-                        }
-                        isOptionEqualToValue={(opt, val) => opt.id === val.id}
-                    /> */}
                     <CoreInput
                         control={control}
                         name="reason"

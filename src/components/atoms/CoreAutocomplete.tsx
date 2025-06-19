@@ -50,6 +50,7 @@ export function CoreAutocomplete<T extends OptionType>({
                             field.onChange(newValue?.value ?? null);
                         }}
                         disabled={isView}
+
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -57,6 +58,7 @@ export function CoreAutocomplete<T extends OptionType>({
                                 error={!!error}
                                 helperText={error?.message}
                                 variant="standard"
+
                             />
                         )}
                     />

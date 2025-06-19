@@ -13,6 +13,8 @@ import ProfilePage from "../pages/employee/ProfilePage";
 import ListEmpPage from "../pages/hr/manageEmp/list";
 import { DetailEmpPage } from "../pages/hr/manageEmp/[id]";
 import { AddNewEmpPage } from "../pages/hr/manageEmp/addNew";
+import { ListFormPage } from "../pages/hr/requestForm/list";
+import { SaveFormPage } from "../pages/hr/requestForm/save";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -25,6 +27,8 @@ const AppRoutes: React.FC = () => {
                         <Route path="/hr/emp/list" element={<ListEmpPage />} />
                         <Route path="/hr/emp/:id" element={<DetailEmpPage />} />
                         <Route path="/hr/emp/add-new" element={<AddNewEmpPage />} />
+                        <Route path="hr/form/list" element={<ListFormPage />} />
+                        <Route path="/hr/form/:id" element={<SaveFormPage />} />
 
                     </Route>
                 </Route>

@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState } from "react";
-import { useGetApi } from "../../../hooks/useGetApi";
-import { useFormCustom } from "../../../lib/form";
-import { getListRequestForm } from "../../../services/employee/listRequest";
-import { Request, Response } from "../../../services/employee/listRequest/type";
-import { render } from "@testing-library/react";
+import { useFormCustom } from "../../../../lib/form";
+import { Request } from "../../../../services/employee/listRequest/type";
+import { useGetApi } from "../../../../hooks/useGetApi";
+import { getListRequestForm } from "../../../../services/employee/listRequest";
 import { Chip } from "@mui/material";
 
 const defaultValues: Request = {
@@ -12,19 +11,19 @@ const defaultValues: Request = {
     status: '',
 };
 
-export function useListRequest() {
+export function useListRequestForm() {
     const { control, handleSubmit, reset } = useFormCustom<Request>({ defaultValues });
 
     const [query, setQuery] = useState<Request>(defaultValues);
 
     const renderStatus = (val: string) => {
         if (val === 'approved') {
-            return <Chip sx={{ minWidth: 70 }} size='small' label="Đã duyệt" color="success" />
+            return <Chip sx={{ minWidth: 80 }} size='small' label="Đã duyệt" color="success" />
         }
         if (val === 'pending') {
-            return <Chip sx={{ minWidth: 70 }} size='small' label="Chờ duyệt" color="warning" />
+            return <Chip sx={{ minWidth: 80 }} size='small' label="Chờ duyệt" color="warning" />
         }
-        return <Chip sx={{ minWidth: 70 }} size='small' label="Từ chối" color="error" />
+        return <Chip sx={{ minWidth: 80 }} size='small' label="Từ chối" color="error" />
 
     }
 

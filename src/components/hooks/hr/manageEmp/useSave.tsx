@@ -26,8 +26,8 @@ export const useSaveEmp = () => {
 
     const [searchParams] = useSearchParams();
     const actionType = searchParams.get("actionType");
-    const { id } = useParams<{ id: string }>();
     const isView = actionType === "view";
+    const { id } = useParams<{ id: string }>();
     const isUpdate = !!id
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);

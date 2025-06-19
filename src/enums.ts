@@ -9,9 +9,13 @@ export const RequestFormStatus = [
     { name: 'Đã duyệt', value: 'approved' },
     { name: 'Từ chối', value: 'rejected' },
     { name: 'Chờ duyệt', value: 'pending' },
-    { name: 'Tất cả', value: null },
+    { name: 'Tất cả', value: '' },
 ]
-
+export const RequestFormStatusType = [
+    { name: 'Đã duyệt', value: 'approved' },
+    { name: 'Từ chối', value: 'rejected' },
+    { name: 'Chờ duyệt', value: 'pending' }
+]
 export const RoleType = [
     { name: 'Nhân viên', value: 'employee' },
     { name: 'Hr', value: 'hr' }

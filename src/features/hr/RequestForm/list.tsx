@@ -1,14 +1,14 @@
-import { Grid } from '@mui/material';
 import React from 'react';
-import { CoreAutocomplete } from '../../components/atoms/CoreAutocomplete';
-import { useListRequest } from '../../components/hooks/employee/useListRequest';
-import { RequestFormStatus, RequestFormType } from '../../enums';
-import CoreButton from '../../components/atoms/CoreButton';
-import CoreTable from '../../components/atoms/CoreTable';
+import { useListRequestForm } from '../../../components/hooks/hr/requestForm/useList';
 import { useNavigate } from 'react-router-dom';
+import { Grid } from '@mui/system';
+import { CoreAutocomplete } from '../../../components/atoms/CoreAutocomplete';
+import { RequestFormStatus, RequestFormType } from '../../../enums';
+import CoreButton from '../../../components/atoms/CoreButton';
+import CoreTable from '../../../components/atoms/CoreTable';
 
-export const ListRequest = () => {
-    const [{ control, columns, tableData, isLoading }, { handleSubmit, onReset, onSubmit }] = useListRequest();
+export const ListFormRequest = () => {
+    const [{ control, columns, tableData, isLoading }, { handleSubmit, onReset, onSubmit }] = useListRequestForm();
     const navigate = useNavigate()
 
     return (
@@ -48,8 +48,8 @@ export const ListRequest = () => {
                 columns={columns}
                 data={tableData?.data?.content}
                 isLoading={isLoading}
-                onRowClick={(row) => navigate(`/hr/form/${row.id}`)}
+                onRowClick={(row) => navigate(`/hr/form/${row.id}?actionType=view`)}
             />
         </>
     );
-};
+}

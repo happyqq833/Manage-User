@@ -13,7 +13,6 @@ const defaultValues: RequestForm = {
     reason: "",
     createdBy: null,
     createdAt: "",
-    approver: null,
 };
 export function useCreateRequest() {
 

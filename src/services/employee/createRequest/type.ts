@@ -10,6 +10,5 @@ export type RequestForm = {
     reason: string
     createdBy: User | null
     createdAt: string
-    approver: User | null
 
 }

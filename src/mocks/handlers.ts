@@ -56,7 +56,7 @@ const users = [
     avatar: "https://example.com/emp1.jpg",
   },
 ];
-let requestForms: RequestForm[] = Array.from({ length: 23 }).map((_, index) => {
+let requestForms: any = Array.from({ length: 23 }).map((_, index) => {
   return {
     id: index + 1,
     name: `Đơn xin nghỉ phép #${index + 1}`,
@@ -210,7 +210,6 @@ export const handlers = [
       reason: body.reason,
       createdBy: body.createdBy,
       createdAt: new Date().toISOString(),
-      approver: body.approver ?? null,
     };
 
     requestForms.push(newRequest);
@@ -224,6 +223,39 @@ export const handlers = [
       })
     );
   }),
+  rest.put("/request-form/:id", async (req, res, ctx) => {
+    const { id } = req.params;
+    const updatedData = await req.json();
+
+    const index = requestForms.findIndex((item: any) => String(item.id) === String(id));
+
+    if (index === -1) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: "Không tìm thấy đơn để cập nhật",
+          traceId: crypto.randomUUID(),
+          data: null,
+        })
+      );
+    }
+
+    // Cập nhật dữ liệu (giữ nguyên id)
+    requestForms[index] = {
+      ...requestForms[index],
+      ...updatedData,
+      id: requestForms[index].id,
+    };
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Cập nhật đơn thành công",
+        traceId: crypto.randomUUID(),
+        data: requestForms[index],
+      })
+    );
+  }),
   rest.get("/request-form", (req, res, ctx) => {
     const page = Number(req.url.searchParams.get("page") ?? "0");
     const size = Number(req.url.searchParams.get("size") ?? "5");
@@ -231,7 +263,15 @@ export const handlers = [
     const start = page * size;
     const end = start + size;
 
-    const pageContent = requestForms.slice(start, end);
+    const pageContent = requestForms.slice(start, end).map((form: any) => ({
+      ...form,
+      // Gán status giả lập nếu chưa có sẵn, có thể random hoặc theo logic nào đó
+      status:
+        form.status ??
+        ["approved", "rejected", "pending"][
+        Math.floor(Math.random() * 3)
+        ],
+    }));
 
     return res(
       ctx.status(200),
@@ -244,6 +284,39 @@ export const handlers = [
           totalPages: Math.ceil(requestForms.length / size),
           pageNumber: page,
           pageSize: size,
+        },
+      })
+    );
+  }),
+
+  rest.get("/request-form/:id", (req, res, ctx) => {
+    const { id } = req.params;
+
+    const form = requestForms.find((item: any) => String(item.id) === String(id));
+
+    if (!form) {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          message: "Không tìm thấy đơn",
+          traceId: crypto.randomUUID(),
+          data: null,
+        })
+      );
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: "Lấy chi tiết đơn thành công",
+        traceId: crypto.randomUUID(),
+        data: {
+          ...form,
+          status:
+            form.status ??
+            ["approved", "rejected", "pending"][
+            Math.floor(Math.random() * 3)
+            ],
         },
       })
     );
