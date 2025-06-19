@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useFormCustom } from "../../../../lib/form";
 import { User } from "../../../../services/hr/employee/getDetail/type";
 import { useGetApi } from "../../../../hooks/useGetApi";
@@ -28,10 +28,11 @@ export const useSaveEmp = () => {
     const { id } = useParams<{ id: string }>();
     const isView = actionType === "view";
     const isUpdate = !!id
-
+    const navigate = useNavigate()
     const { control, handleSubmit, reset, setValue } = useFormCustom<User>({ defaultValues });
 
     const { data } = useGetApi(() => getDetailEmp({ id }), [id])
+
 
     useEffect(() => {
         if (id && data) {
@@ -41,9 +42,11 @@ export const useSaveEmp = () => {
 
     const { mutate } = useMutationApi(
         isUpdate ? putEmp : postEmp, {
-        onSuccess: (res) => {
-            toast.success("Yêu cầu đã được tạo thành công!");
-            // navigate("/employee/requests");
+        onSuccess: (res: any) => {
+            const mess = res.message
+            const newId = res.data.id
+            toast.success(mess);
+            navigate(`/hr/emp/${newId}?actionType=view`);
         },
         onError: (err) => {
             toast.error(err.message || "Đã có lỗi xảy ra, vui lòng thử lại sau!");

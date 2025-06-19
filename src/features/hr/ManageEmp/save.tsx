@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 import React from 'react';
 import CoreInput from '../../../components/atoms/CoreInput';
@@ -17,7 +17,10 @@ export const SaveEmp = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} padding={4}>
+                <Grid size={12} >
+                    <Typography align='center' >Chi tiết nhân viên</Typography>
+                </Grid>
                 <Grid size={4}>
                     <CoreInput
                         control={control}
@@ -118,14 +121,26 @@ export const SaveEmp = () => {
                             Back
                         </CoreButton>
                         {isView ? (
-                            <CoreButton
-                                key={'editBtn'}
-                                sx={{ margin: 2, maxWidth: 120 }}
-                                variant="outlined"
-                                onClick={() => navigate(`/hr/emp/${id}`)}
-                            >
-                                Chỉnh sửa
-                            </CoreButton>
+                            <>
+                                <CoreButton
+                                    key={'editBtn'}
+                                    sx={{ margin: 2, maxWidth: 120 }}
+                                    variant="outlined"
+                                    onClick={() => navigate(`/hr/emp/${id}`)}
+                                >
+                                    Chỉnh sửa
+                                </CoreButton>
+                                <CoreButton
+                                    key={'deleteBtn'}
+                                    sx={{ margin: 2, maxWidth: 120 }}
+                                    variant="outlined"
+                                    onClick={() => navigate(`/hr/emp/${id}`)}
+                                >
+                                    Xóa
+                                </CoreButton>
+                            </>
+
+
                         ) : (
                             <CoreButton
                                 key={'saveBtn'}
@@ -140,7 +155,6 @@ export const SaveEmp = () => {
                     </div>
 
                 </Grid>
-
 
             </Grid>
         </form>
