@@ -3,8 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "../pages/auth/LoginPage";
 import HrPage from "../pages/hr/HrPage";
 import EmployeePage from "../pages/employee/EmployeePage";
-import PrivateRoute from "../components/PrivateRoute";
-import RoleBasedRoute from "../components/RoleBasedRoute";
+import PrivateRoute from "../components/route/PrivateRoute";
 import HrLayout from "../layouts/HrLayout";
 import EmployeeLayout from "../layouts/EmployeeLayout";
 import ListRequestPage from "../pages/employee/ListRequestPage";
@@ -16,11 +15,20 @@ import { AddNewEmpPage } from "../pages/hr/manageEmp/addNew";
 import { ListFormPage } from "../pages/hr/requestForm/list";
 import { SaveFormPage } from "../pages/hr/requestForm/save";
 import Page404 from "../components/common/Page404";
+import RoleBasedRoute from "../components/route/RoleBasedRoute";
+import GuestRoute from "../components/route/GuestRoute";
 
 const AppRoutes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/login" element={<LoginPage />} />
+            <Route
+                path="/login"
+                element={
+                    <GuestRoute>
+                        <LoginPage />
+                    </GuestRoute>
+                }
+            />
             <Route element={<PrivateRoute />}>
                 <Route element={<RoleBasedRoute allowedRoles={["hr"]} />}>
                     <Route element={<HrLayout />}>

@@ -8,6 +8,8 @@ import { useMutationApi } from "../../../../hooks/useMutationApi";
 import { postEmp, putEmp } from "../../../../services/hr/employee/save";
 import { toast } from "react-toastify";
 import { deleteEmp } from "../../../../services/hr/employee/delete";
+import { userSchema } from "../../../../schemas/employee.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const defaultValues: User = {
     id: '',
@@ -32,7 +34,10 @@ export const useSaveEmp = () => {
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
 
-    const { control, handleSubmit, reset, setValue } = useFormCustom<User>({ defaultValues });
+    const { control, handleSubmit, reset, setValue } = useFormCustom<User>({
+        resolver: zodResolver(userSchema),
+        defaultValues: defaultValues
+    });
 
     const { data } = useGetApi(() => getDetailEmp({ id }), [id])
 

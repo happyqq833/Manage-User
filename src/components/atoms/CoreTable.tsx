@@ -36,7 +36,7 @@ export default function CoreTable({
     onRowClick,
     page = 0,
     rowsPerPage = 5,
-    total = 10,
+    total = 0,
     onPageChange = () => { },
     onRowsPerPageChange,
 }: CoreTableProps) {

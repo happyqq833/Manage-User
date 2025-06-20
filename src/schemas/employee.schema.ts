@@ -12,3 +12,5 @@ export const userSchema = z.object({
     role: z.enum(['hr', 'employee'], { required_error: 'Vai trò không hợp lệ' }),
     avatar: z.string().optional()
 });
+
+export type UserForm = z.infer<typeof userSchema>; 

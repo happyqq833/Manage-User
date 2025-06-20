@@ -19,7 +19,7 @@ const users = [
   },
   {
     id: "2",
-    username: "Nam Tran",
+    username: "emp1",
     password: "123",
     role: "employee",
     fullName: "Trần Văn Nam",

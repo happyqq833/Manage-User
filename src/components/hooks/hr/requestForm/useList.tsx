@@ -7,6 +7,8 @@ import { getListRequestForm } from "../../../../services/employee/listRequest";
 import { Chip } from "@mui/material";
 
 const defaultValues: Request = {
+    page: 1,
+    size: 5,
     name: '',
     status: '',
 };
@@ -26,6 +28,20 @@ export function useListRequestForm() {
         return <Chip sx={{ minWidth: 80 }} size='small' label="Từ chối" color="error" />
 
     }
+
+    const onPageChange = (_: unknown, newPage: number) => {
+        setQuery((prev) => ({
+            ...prev,
+            page: newPage + 1,
+        }));
+    };
+    const onRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery((prev) => ({
+            ...prev,
+            size: parseInt(event.target.value),
+            page: 1,
+        }));
+    };
 
 
     const onReset = () => {
@@ -62,8 +78,8 @@ export function useListRequestForm() {
         }
     ];
 
-
     const { data: tableData, isLoading } = useGetApi<any>(() => getListRequestForm(query), [query]);
+    const total = tableData?.data?.totalElements ?? 0;
 
-    return [{ columns, tableData, isLoading, control }, { handleSubmit, onReset, onSubmit }] as const;
+    return [{ columns, tableData, isLoading, control, query, total }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] as const;
 }

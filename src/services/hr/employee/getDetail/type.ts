@@ -1,7 +1,7 @@
 import { BaseResponse } from "../../../type";
 
 export type User = {
-    id: string;
+    id?: string;
     username: string;
     fullName: string;
     dob: string;
@@ -10,7 +10,7 @@ export type User = {
     department: string;
     position: string;
     role: "hr" | "employee";
-    avatar: string;
+    avatar?: string;
 };
 
 export type Response = BaseResponse<User>;

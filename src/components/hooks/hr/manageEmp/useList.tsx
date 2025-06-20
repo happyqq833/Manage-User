@@ -69,6 +69,7 @@ export function useListEmp() {
 
 
     const { data: tableData, isLoading } = useGetApi<any>(() => getListEmp(query), [query]);
+    const total = tableData?.data?.totalElements ?? 0;
 
-    return [{ columns, tableData, isLoading, control, query }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] as const;
+    return [{ columns, tableData, isLoading, control, query, total }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] as const;
 }

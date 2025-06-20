@@ -8,7 +8,7 @@ import CoreButton from '../../../components/atoms/CoreButton';
 import CoreTable from '../../../components/atoms/CoreTable';
 
 export const ListFormRequest = () => {
-    const [{ control, columns, tableData, isLoading }, { handleSubmit, onReset, onSubmit }] = useListRequestForm();
+    const [{ control, columns, tableData, isLoading, query, total }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] = useListRequestForm();
     const navigate = useNavigate()
 
     return (
@@ -49,6 +49,11 @@ export const ListFormRequest = () => {
                 data={tableData?.data?.content}
                 isLoading={isLoading}
                 onRowClick={(row) => navigate(`/hr/form/${row.id}?actionType=view`)}
+                page={(query.page ?? 1) - 1}
+                rowsPerPage={query.size}
+                onPageChange={onPageChange}
+                onRowsPerPageChange={onRowsPerPageChange}
+                total={total}
             />
         </>
     );

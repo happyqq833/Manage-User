@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const ListEmp = () => {
     const [value, handle] = useListEmp();
-    const { control, columns, tableData, isLoading, query } = value
+    const { control, columns, tableData, isLoading, query, total } = value
     const { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange } = handle
     const navigate = useNavigate();
 
@@ -69,6 +69,7 @@ export const ListEmp = () => {
                 rowsPerPage={query.size}
                 onPageChange={onPageChange}
                 onRowsPerPageChange={onRowsPerPageChange}
+                total={total}
             />
         </>
     );
