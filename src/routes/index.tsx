@@ -15,6 +15,7 @@ import { DetailEmpPage } from "../pages/hr/manageEmp/[id]";
 import { AddNewEmpPage } from "../pages/hr/manageEmp/addNew";
 import { ListFormPage } from "../pages/hr/requestForm/list";
 import { SaveFormPage } from "../pages/hr/requestForm/save";
+import Page404 from "../components/common/Page404";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
                         <Route path="/hr/emp/add-new" element={<AddNewEmpPage />} />
                         <Route path="hr/form/list" element={<ListFormPage />} />
                         <Route path="/hr/form/:id" element={<SaveFormPage />} />
+                        <Route path="/hr/profile" element={<ProfilePage />} />
 
                     </Route>
                 </Route>
@@ -38,11 +40,10 @@ const AppRoutes: React.FC = () => {
                         <Route path="/employee" element={<EmployeePage />} />
                         <Route path="/employee/request" element={<CreateRequestPage />} />
                         <Route path="/employee/requests" element={<ListRequestPage />} />
-                        <Route path="/employee/profile" element={<ProfilePage />} />
                     </Route>
                 </Route>
             </Route>
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="*" element={<Page404 />} />
         </Routes>
     );
 };

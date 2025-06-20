@@ -5,29 +5,32 @@ import { RequestForm } from "../services/employee/createRequest/type";
 const users = [
   {
     id: "1",
-    username: "hr1",
+    username: "LanNN",
     password: "123",
     role: "hr",
-    fullName: "Nguyễn Thị HR",
+    fullName: "Nguyễn Ngọc Lan",
     dob: "1990-01-01",
     phone: "0909000000",
     address: "123 Lê Lợi, Q1, TP.HCM",
     department: "Phòng Nhân sự",
     position: "Trưởng phòng",
     avatar: "https://example.com/hr1.jpg",
+    email: "lan@gmail.com"
   },
   {
     id: "2",
-    username: "emp1",
+    username: "Nam Tran",
     password: "123",
     role: "employee",
-    fullName: "Trần Văn Employee",
+    fullName: "Trần Văn Nam",
     dob: "1995-06-15",
     phone: "0909111111",
     address: "456 Trần Hưng Đạo, Q5, TP.HCM",
     department: "Phòng Kỹ thuật",
     position: "Nhân viên lập trình",
     avatar: "https://example.com/emp1.jpg",
+    email: "nam@gmail.com"
+
   },
   {
     id: "3",
@@ -41,6 +44,8 @@ const users = [
     department: "Phòng Kỹ thuật",
     position: "Nhân viên lập trình",
     avatar: "https://example.com/emp1.jpg",
+    email: "he@hmail.com"
+
   },
   {
     id: "4",
@@ -54,6 +59,53 @@ const users = [
     department: "Phòng Kỹ thuật",
     position: "Nhân viên lập trình",
     avatar: "https://example.com/emp1.jpg",
+    email: "ha@hmail.com"
+
+  },
+  {
+    id: "5",
+    username: "emp4",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn HaHa",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+    email: "ha@hmail.com"
+
+  },
+  {
+    id: "5",
+    username: "emp4",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn HaHa",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+    email: "ha@hmail.com"
+
+  },
+  {
+    id: "5",
+    username: "emp4",
+    password: "123",
+    role: "employee",
+    fullName: "Trần Văn HaHa",
+    dob: "1995-06-15",
+    phone: "0909111111",
+    address: "456 Trần Hưng Đạo, Q5, TP.HCM",
+    department: "Phòng Kỹ thuật",
+    position: "Nhân viên lập trình",
+    avatar: "https://example.com/emp1.jpg",
+    email: "ha@hmail.com"
+
   },
 ];
 let requestForms: any = Array.from({ length: 23 }).map((_, index) => {

@@ -9,7 +9,7 @@ export default function EmployeeLayout() {
         { text: "Trang chủ", path: "/employee" },
         { text: "Tạo đơn", path: "/employee/request" },
         { text: "Xem đơn", path: "/employee/requests" },
-        { text: "Thông tin cá nhân", path: "/employee/profile" },
+        { text: "Profile", path: "/employee/profile?actionType=view" },
         { text: "Đăng xuất", path: "/logout" }
     ];
 

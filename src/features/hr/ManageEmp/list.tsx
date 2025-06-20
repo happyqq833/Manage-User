@@ -9,7 +9,9 @@ import CoreInput from '../../../components/atoms/CoreInput';
 import { useNavigate } from 'react-router-dom';
 
 export const ListEmp = () => {
-    const [{ control, columns, tableData, isLoading }, { handleSubmit, onReset, onSubmit }] = useListEmp();
+    const [value, handle] = useListEmp();
+    const { control, columns, tableData, isLoading, query } = value
+    const { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange } = handle
     const navigate = useNavigate();
 
     return (
@@ -63,6 +65,10 @@ export const ListEmp = () => {
                 data={tableData?.data?.content}
                 isLoading={isLoading}
                 onRowClick={(row) => navigate(`/hr/emp/${row.id}?actionType=view`)}
+                page={(query.page ?? 1) - 1}
+                rowsPerPage={query.size}
+                onPageChange={onPageChange}
+                onRowsPerPageChange={onRowsPerPageChange}
             />
         </>
     );

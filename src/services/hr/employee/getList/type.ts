@@ -10,8 +10,8 @@ export type Employee = {
 export type Response = PageResponse<Employee>;
 
 export type Request = {
-    page?: number;
-    size?: number;
+    page: number;
+    size: number;
     search?: string;
     department?: string;
     fullName?: string;

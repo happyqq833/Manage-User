@@ -9,62 +9,154 @@ import {
 } from "@mui/material";
 
 import { useProfileDetail } from "../../components/hooks/employee/useProfileDetail";
+import CoreButton from "../../components/atoms/CoreButton";
+import CoreInput from "../../components/atoms/CoreInput";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileDetail() {
 
-    const { userDetail, isLoading } = useProfileDetail()
-    return (
-        <Paper sx={{ p: 4, maxWidth: 1000, mx: "auto" }}>
+    const [value, handle] = useProfileDetail()
+    const { control, isLoading, isView, user } = value
+    const { handleSubmit, onSubmit } = handle
+    const navigate = useNavigate()
+    const role = user?.role
 
+    return (
+        <>
             {isLoading && (
                 <Box display="flex" justifyContent="center" mt={5}>
                     <CircularProgress />
                 </Box>
             )}
-            <Box display="flex" alignItems="center" mb={4}>
-                <Avatar
-                    src={userDetail?.avatar ?? "https://via.placeholder.com/80"}
-                    sx={{ width: 80, height: 80, mr: 3 }}
-                    alt={userDetail?.fullName ?? "Avatar"}
-                />
-                <Box>
-                    <Typography variant="h5">{userDetail?.fullName}</Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
-                        {userDetail?.position} - {userDetail?.department}
-                    </Typography>
-                </Box>
-            </Box>
 
-            <Grid container spacing={2}>
-                <Grid >
-                    <Typography variant="subtitle2">Tài khoản</Typography>
-                    <Typography>{userDetail?.username || "Chưa cập nhật"}</Typography>
-                </Grid>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid container spacing={4} padding={4}>
+                    <Grid size={12} >
+                        <Typography align='center' >Thông tin cá nhân</Typography>
+                    </Grid>
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='fullName'
+                            label='Họ và tên'
+                            placeholder='Nhập họ và tên'
+                            variant='standard'
+                            disabled={isView}
+                        />
 
-                <Grid >
-                    <Typography variant="subtitle2">Ngày sinh</Typography>
-                    <Typography>{userDetail?.dob || "Chưa cập nhật"}</Typography>
-                </Grid>
+                    </Grid>
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='username'
+                            label='Tên đăng nhập'
+                            placeholder='Nhập tên đăng nhập'
+                            variant='standard'
+                            disabled={isView}
 
-                <Grid >
-                    <Typography variant="subtitle2">Số điện thoại</Typography>
-                    <Typography>{userDetail?.phone || "Chưa cập nhật"}</Typography>
-                </Grid>
+                        />
 
-                <Grid >
-                    <Typography variant="subtitle2">Địa chỉ</Typography>
-                    <Typography>{userDetail?.address || "Chưa cập nhật"}</Typography>
-                </Grid>
+                    </Grid>
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='dob'
+                            label='Ngày sinh'
+                            placeholder='Nhập ngày sinh'
+                            variant='standard'
+                            disabled={isView}
 
-                <Grid >
-                    <Typography variant="subtitle2">Vai trò</Typography>
-                    <Typography>
-                        {userDetail?.role === "hr"
-                            ? "HR"
-                            : "Chưa cập nhật"}
-                    </Typography>
+                        />
+
+                    </Grid>
+
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='department'
+                            label='Phòng ban'
+                            placeholder='Nhập phòng ban'
+                            variant='standard'
+                            disabled={isView}
+
+                        />
+
+                    </Grid>
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='position'
+                            label='Vị trí'
+                            placeholder='Nhập vị trí'
+                            variant='standard'
+                            disabled={isView}
+
+                        />
+
+                    </Grid>
+
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='phone'
+                            label='Số điện thoại'
+                            placeholder='Nhập số điện thoại'
+                            variant='standard'
+                            disabled={isView}
+
+                        />
+                    </Grid>
+
+                    <Grid size={4}>
+                        <CoreInput
+                            control={control}
+                            name='address'
+                            label='Địa chỉ'
+                            placeholder='Nhập địa chỉ'
+                            variant='standard'
+                            disabled={isView}
+
+                        />
+                    </Grid>
+                    <Grid size={12}>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                            <CoreButton sx={{ margin: 2, maxWidth: 100 }} variant="outlined" onClick={() => navigate(`/${role}`)} >
+                                Back
+                            </CoreButton>
+                            {isView ? (
+                                <>
+                                    <CoreButton
+                                        key={'editBtn'}
+                                        sx={{ margin: 2, maxWidth: 120 }}
+                                        variant="outlined"
+                                        onClick={() => navigate(`/${role}/profile`)}
+                                    >
+                                        Chỉnh sửa
+                                    </CoreButton>
+
+                                </>
+
+
+                            ) : (
+                                <CoreButton
+                                    key={'saveBtn'}
+                                    sx={{ margin: 2, maxWidth: 100 }}
+                                    variant="outlined"
+                                    type="submit"
+                                >
+                                    Lưu
+                                </CoreButton>
+                            )}
+
+                        </div>
+
+                    </Grid>
+
                 </Grid>
-            </Grid>
-        </Paper>
+            </form >
+
+        </>
+
     );
 }

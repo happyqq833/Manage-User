@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const defaultValues: RequestForm = {
     id: "",
-    name: "",
+    name: "leave",
     reason: "",
     createdBy: null,
     createdAt: "",
@@ -27,9 +27,10 @@ export function useCreateRequest() {
     const {
         mutate,
     } = useMutationApi(postRequestForm, {
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
+            const requestId = res.data.id
             toast.success("Yêu cầu đã được tạo thành công!");
-            navigate("/employee/requests");
+            navigate(`/employee/requests/${requestId}?actionType=view`);
         },
         onError: (err) => {
             toast.error(err.message || "Đã có lỗi xảy ra, vui lòng thử lại sau!");

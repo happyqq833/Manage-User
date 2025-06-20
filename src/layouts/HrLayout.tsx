@@ -8,7 +8,9 @@ export default function HrLayout() {
     const drawerItems = [
         { text: "Trang chủ", path: "/hr" },
         { text: "Nhân viên", path: "/hr/emp/list" },
-        { text: "Duyệt đơn", path: "hr/form/list" }
+        { text: "Duyệt đơn", path: "hr/form/list" },
+        { text: "Profile", path: "/hr/profile?actionType=view" },
+        { text: "Đăng xuất", path: "/logout" }
     ];
 
     return (

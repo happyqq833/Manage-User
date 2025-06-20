@@ -1,9 +1,15 @@
 
 export const RequestFormType = [
-    { name: 'Leave', value: 'leave' },
-    { name: 'Sick', value: 'sick' },
-    { name: 'Unpaid', value: 'unpaid' },
+    { name: 'Nghỉ phép', value: 'leave' },
+    { name: 'Nghỉ ốm', value: 'sick' },
+    { name: 'Nghỉ không lương', value: 'unpaid' },
     { name: 'Tất cả', value: '' },];
+
+export const RequestForm = [
+    { name: 'Nghỉ phép', value: 'leave' },
+    { name: 'Nghỉ ốm', value: 'sick' },
+    { name: 'Nghỉ không lương', value: 'unpaid' },
+];
 
 export const RequestFormStatus = [
     { name: 'Đã duyệt', value: 'approved' },

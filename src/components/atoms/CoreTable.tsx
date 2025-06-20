@@ -7,8 +7,8 @@ import {
     TableBody,
     TableContainer,
     Paper,
+    TablePagination,
 } from "@mui/material";
-import { f } from "msw/lib/glossary-2792c6da";
 
 type ColumnDef = {
     title: string;
@@ -21,21 +21,36 @@ type CoreTableProps = {
     data?: any[];
     isLoading?: boolean;
     onRowClick?: (row: any) => void;
+
+    page?: number;
+    rowsPerPage?: number;
+    total?: number;
+    onPageChange?: (event: unknown, newPage: number) => void;
+    onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function CoreTable({ columns, data = [], isLoading, onRowClick }: CoreTableProps) {
-
+export default function CoreTable({
+    columns,
+    data = [],
+    isLoading,
+    onRowClick,
+    page = 0,
+    rowsPerPage = 5,
+    total = 10,
+    onPageChange = () => { },
+    onRowsPerPageChange,
+}: CoreTableProps) {
     const stt: ColumnDef = {
         fieldName: "stt",
         title: "STT",
-    }
+    };
     const columnsWithStt = [stt, ...columns];
-    console.log("columnsWithStt", columnsWithStt);
 
     const dataWithStt = data.map((item, index) => ({
-        stt: index + 1,
+        stt: page * rowsPerPage + index + 1,
         ...item,
     }));
+
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -48,21 +63,33 @@ export default function CoreTable({ columns, data = [], isLoading, onRowClick }:
                 </TableHead>
                 <TableBody>
                     {dataWithStt.map((row, index) => (
-
                         <TableRow
                             key={index}
                             hover
                             style={{ cursor: onRowClick ? "pointer" : "default" }}
-                            onClick={() => onRowClick?.(row)} >
+                            onClick={() => onRowClick?.(row)}
+                        >
                             {columnsWithStt.map((col) => (
                                 <TableCell key={col.fieldName}>
-                                    {col.render ? col.render(row[col.fieldName], row) : row[col.fieldName]}
+                                    {col.render
+                                        ? col.render(row[col.fieldName], row)
+                                        : row[col.fieldName]}
                                 </TableCell>
                             ))}
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+
+            <TablePagination
+                component="div"
+                count={total}
+                page={page}
+                onPageChange={onPageChange}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={onRowsPerPageChange}
+                rowsPerPageOptions={[5, 10, 20]}
+            />
         </TableContainer>
     );
 }

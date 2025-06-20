@@ -6,7 +6,6 @@ import CoreInput from "../../components/atoms/CoreInput"
 import { Request } from "../../services/auth/type"
 import { login } from "../../services/auth/authService"
 import { getUserInfo } from "../../ultis/auth"
-import { u } from "msw/lib/glossary-2792c6da"
 import { useUser } from "../../context/userProvider"
 
 
@@ -22,7 +21,6 @@ export default function LoginForm() {
 
   const onSubmit = async (data: Request) => {
     try {
-      const result = await login(data)
 
       const userData = getUserInfo();
       setUser(userData)

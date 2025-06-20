@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useFormCustom } from "../../../../lib/form";
 import { useGetApi } from "../../../../hooks/useGetApi";
-import { getListRequestForm } from "../../../../services/employee/listRequest";
 import { Request } from "../../../../services/hr/employee/getList/type";
 import { getListEmp } from "../../../../services/hr/employee/getList";
 
@@ -9,7 +8,7 @@ import { getListEmp } from "../../../../services/hr/employee/getList";
 const defaultValues: Request = {
     search: "",
     page: 1,
-    size: 10,
+    size: 5,
     department: "",
     fullName: ""
 }
@@ -18,6 +17,20 @@ export function useListEmp() {
     const { control, handleSubmit, reset } = useFormCustom<Request>({ defaultValues });
 
     const [query, setQuery] = useState<Request>(defaultValues);
+
+    const onPageChange = (_: unknown, newPage: number) => {
+        setQuery((prev) => ({
+            ...prev,
+            page: newPage + 1,
+        }));
+    };
+    const onRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery((prev) => ({
+            ...prev,
+            size: parseInt(event.target.value),
+            page: 1,
+        }));
+    };
 
 
     const onReset = () => {
@@ -57,5 +70,5 @@ export function useListEmp() {
 
     const { data: tableData, isLoading } = useGetApi<any>(() => getListEmp(query), [query]);
 
-    return [{ columns, tableData, isLoading, control }, { handleSubmit, onReset, onSubmit }] as const;
+    return [{ columns, tableData, isLoading, control, query }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] as const;
 }
