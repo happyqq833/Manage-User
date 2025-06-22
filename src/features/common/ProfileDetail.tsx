@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-    Avatar,
     Box,
-    Paper,
     CircularProgress,
     Typography,
     Grid,
 } from "@mui/material";
 
-import { useProfileDetail } from "../../components/hooks/employee/useProfileDetail";
+import { useProfileDetail } from "../../components/hooks/common/useProfileDetail";
 import CoreButton from "../../components/atoms/CoreButton";
 import CoreInput from "../../components/atoms/CoreInput";
 import { useNavigate } from "react-router-dom";
@@ -125,19 +123,14 @@ export default function ProfileDetail() {
                                 Back
                             </CoreButton>
                             {isView ? (
-                                <>
-                                    <CoreButton
-                                        key={'editBtn'}
-                                        sx={{ margin: 2, maxWidth: 120 }}
-                                        variant="outlined"
-                                        onClick={() => navigate(`/${role}/profile`)}
-                                    >
-                                        Chỉnh sửa
-                                    </CoreButton>
-
-                                </>
-
-
+                                <CoreButton
+                                    key={'editBtn'}
+                                    sx={{ margin: 2, maxWidth: 120 }}
+                                    variant="outlined"
+                                    onClick={() => navigate(`/${role}/profile`)}
+                                >
+                                    Chỉnh sửa
+                                </CoreButton>
                             ) : (
                                 <CoreButton
                                     key={'saveBtn'}
@@ -148,15 +141,10 @@ export default function ProfileDetail() {
                                     Lưu
                                 </CoreButton>
                             )}
-
                         </div>
-
                     </Grid>
-
                 </Grid>
             </form >
-
         </>
-
     );
 }

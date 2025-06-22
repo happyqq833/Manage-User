@@ -39,7 +39,6 @@ export const useSaveForm = () => {
         putForm, {
         onSuccess: (res: any) => {
             const mess = res.message
-            const newId = res.data.id
             toast.success(mess);
             navigate(`/hr/form/list`);
         },
@@ -53,5 +52,5 @@ export const useSaveForm = () => {
         mutate({ ...data })
     }
 
-    return [{ id, control, isView }, {}] as const
+    return [{ id, control, isView }, { handleSubmit, onSubmit }] as const
 }

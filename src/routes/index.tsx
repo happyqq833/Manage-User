@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/auth/LoginPage";
 import HrPage from "../pages/hr/HrPage";
 import EmployeePage from "../pages/employee/EmployeePage";
@@ -17,6 +17,7 @@ import { SaveFormPage } from "../pages/hr/requestForm/save";
 import Page404 from "../components/common/Page404";
 import RoleBasedRoute from "../components/route/RoleBasedRoute";
 import GuestRoute from "../components/route/GuestRoute";
+import LogoutPage from "../pages/auth/LogoutPage";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
                     </GuestRoute>
                 }
             />
+            <Route path="/logout" element={<LogoutPage />} />
             <Route element={<PrivateRoute />}>
                 <Route element={<RoleBasedRoute allowedRoles={["hr"]} />}>
                     <Route element={<HrLayout />}>
@@ -48,6 +50,7 @@ const AppRoutes: React.FC = () => {
                         <Route path="/employee" element={<EmployeePage />} />
                         <Route path="/employee/request" element={<CreateRequestPage />} />
                         <Route path="/employee/requests" element={<ListRequestPage />} />
+                        <Route path="/employee/profile" element={<ProfilePage />} />
                     </Route>
                 </Route>
             </Route>

@@ -8,16 +8,17 @@ import { useNavigate } from "react-router-dom";
 
 
 const defaultValues: RequestForm = {
-    id: "",
-    name: "leave",
-    reason: "",
+    id: '',
+    name: 'leave',
+    reason: '',
     createdBy: null,
-    createdAt: "",
+    createdAt: '',
+    status: 'pending'
 };
 export function useCreateRequest() {
 
     const { user } = useUser();
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const {
         control,
         handleSubmit,
@@ -28,9 +29,8 @@ export function useCreateRequest() {
         mutate,
     } = useMutationApi(postRequestForm, {
         onSuccess: (res: any) => {
-            const requestId = res.data.id
-            toast.success("Yêu cầu đã được tạo thành công!");
-            navigate(`/employee/requests/${requestId}?actionType=view`);
+            toast.success(res.message);
+            navigate(`/employee/requests`);
         },
         onError: (err) => {
             toast.error(err.message || "Đã có lỗi xảy ra, vui lòng thử lại sau!");
@@ -42,9 +42,9 @@ export function useCreateRequest() {
         const requestData = {
             ...data,
             createdBy: {
-                id: user?.id || "",
-                username: user?.username || "",
-                role: user?.role || "",
+                id: user?.id ?? '',
+                username: user?.username ?? '',
+                role: user?.role ?? '',
             },
             createdAt: new Date().toISOString(),
         };

@@ -1,10 +1,11 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState } from 'react';
 import { useFormCustom } from "../../../../lib/form";
 import { Request } from "../../../../services/employee/listRequest/type";
 import { useGetApi } from "../../../../hooks/useGetApi";
 import { getListRequestForm } from "../../../../services/employee/listRequest";
 import { Chip } from "@mui/material";
+import { getNameByValue } from '../../../../ultis/getNameByValue';
+import { RequestForm } from '../../../../enums';
 
 const defaultValues: Request = {
     page: 1,
@@ -61,6 +62,7 @@ export function useListRequestForm() {
         {
             title: 'Tên đơn',
             fieldName: 'name',
+            render: (val: string) => getNameByValue(RequestForm, val)
         },
         {
             title: 'Lý do',

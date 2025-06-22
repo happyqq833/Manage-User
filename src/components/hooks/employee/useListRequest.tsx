@@ -3,11 +3,14 @@ import { useState } from "react";
 import { useGetApi } from "../../../hooks/useGetApi";
 import { useFormCustom } from "../../../lib/form";
 import { getListRequestForm } from "../../../services/employee/listRequest";
-import { Request, Response } from "../../../services/employee/listRequest/type";
-import { render } from "@testing-library/react";
+import { Request } from "../../../services/employee/listRequest/type";
 import { Chip } from "@mui/material";
+import { getNameByValue } from '../../../ultis/getNameByValue';
+import { RequestForm } from '../../../enums';
 
 const defaultValues: Request = {
+    page: 1,
+    size: 5,
     name: '',
     status: '',
 };
@@ -27,7 +30,19 @@ export function useListRequest() {
         return <Chip sx={{ minWidth: 70 }} size='small' label="Từ chối" color="error" />
 
     }
-
+    const onPageChange = (_: unknown, newPage: number) => {
+        setQuery((prev) => ({
+            ...prev,
+            page: newPage + 1,
+        }));
+    };
+    const onRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery((prev) => ({
+            ...prev,
+            size: parseInt(event.target.value),
+            page: 1,
+        }));
+    };
 
     const onReset = () => {
         reset();
@@ -46,6 +61,8 @@ export function useListRequest() {
         {
             title: 'Tên đơn',
             fieldName: 'name',
+            render: (val: string) => getNameByValue(RequestForm, val)
+
         },
         {
             title: 'Lý do',
@@ -65,6 +82,8 @@ export function useListRequest() {
 
 
     const { data: tableData, isLoading } = useGetApi<any>(() => getListRequestForm(query), [query]);
+    const total = tableData?.data?.totalElements ?? 0;
 
-    return [{ columns, tableData, isLoading, control }, { handleSubmit, onReset, onSubmit }] as const;
+
+    return [{ columns, tableData, isLoading, control, query, total }, { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange }] as const;
 }

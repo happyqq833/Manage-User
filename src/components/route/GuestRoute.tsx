@@ -8,8 +8,8 @@ type Props = {
 
 const GuestRoute = ({ children }: Props) => {
     const { user } = useUser()
-    const role = user?.role
     if (user) {
+        const role = user?.role
         return <Navigate to={`/${role}`} replace />;
     }
 

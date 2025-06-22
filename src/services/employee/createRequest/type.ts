@@ -10,5 +10,5 @@ export type RequestForm = {
     reason: string
     createdBy: User | null
     createdAt: string
-
+    status: 'pending' | 'rejected' | 'approved'
 }

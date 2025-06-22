@@ -5,7 +5,7 @@ import { CoreAutocomplete } from "../../components/atoms/CoreAutocomplete";
 import CoreInput from "../../components/atoms/CoreInput";
 import CoreButton from "../../components/atoms/CoreButton";
 import { useCreateRequest } from "../../components/hooks/employee/useCreateRequest";
-import { RequestForm, RequestFormType } from "../../enums";
+import { RequestForm } from "../../enums";
 import { Grid } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ export default function CreateRequest() {
                         control={control}
                         name='createdBy.username'
                         label="Người tạo đơn"
-                        value={user?.username || ""}
+                        value={user?.username}
                         disabled
                         variant="standard"
                     />

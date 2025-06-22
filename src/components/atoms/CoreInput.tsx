@@ -6,7 +6,7 @@ import {
   Tooltip,
   TextFieldProps
 } from "@mui/material"
-import { Controller, Control, FieldValues, Path } from "react-hook-form"
+import { Controller, Control, FieldValues, Path, RegisterOptions } from "react-hook-form"
 import { useState } from "react"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 
@@ -18,6 +18,7 @@ type CoreInputProps<T extends FieldValues> = {
   descriptionText?: string
   tooltip?: string
   startIcon?: React.ReactNode
+  rules?: Omit<RegisterOptions<T, Path<T>>, "setValueAs" | "disabled" | "valueAsNumber" | "valueAsDate">;
 } & TextFieldProps
 
 export default function CoreInput<T extends FieldValues>({
@@ -29,6 +30,7 @@ export default function CoreInput<T extends FieldValues>({
   tooltip,
   startIcon,
   type,
+  rules,
   ...rest
 }: CoreInputProps<T>) {
   const [showPassword, setShowPassword] = useState(false)
@@ -38,6 +40,7 @@ export default function CoreInput<T extends FieldValues>({
     <Controller
       name={name}
       control={control}
+      rules={rules}
       render={({ field, fieldState: { error } }) => (
         <>
           <div className="flex items-center justify-between">

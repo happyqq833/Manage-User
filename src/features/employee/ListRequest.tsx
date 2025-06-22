@@ -5,11 +5,11 @@ import { useListRequest } from '../../components/hooks/employee/useListRequest';
 import { RequestFormStatus, RequestFormType } from '../../enums';
 import CoreButton from '../../components/atoms/CoreButton';
 import CoreTable from '../../components/atoms/CoreTable';
-import { useNavigate } from 'react-router-dom';
 
 export const ListRequest = () => {
-    const [{ control, columns, tableData, isLoading }, { handleSubmit, onReset, onSubmit }] = useListRequest();
-    const navigate = useNavigate()
+    const [value, handle] = useListRequest();
+    const { control, columns, tableData, isLoading, query, total } = value
+    const { handleSubmit, onReset, onSubmit, onPageChange, onRowsPerPageChange } = handle
 
     return (
         <>
@@ -48,7 +48,11 @@ export const ListRequest = () => {
                 columns={columns}
                 data={tableData?.data?.content}
                 isLoading={isLoading}
-                onRowClick={(row) => navigate(`/hr/form/${row.id}`)}
+                page={(query.page ?? 1) - 1}
+                rowsPerPage={query.size}
+                onPageChange={onPageChange}
+                onRowsPerPageChange={onRowsPerPageChange}
+                total={total}
             />
         </>
     );

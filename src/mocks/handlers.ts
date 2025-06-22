@@ -108,12 +108,12 @@ const users = [
 
   },
 ];
-let requestForms: any = Array.from({ length: 23 }).map((_, index) => {
+let requestForms: any = Array.from({ length: 20 }).map((_, index) => {
   return {
     id: index + 1,
-    name: `Đơn xin nghỉ phép #${index + 1}`,
+    name: `leave`,
     reason: `Lý do ${index + 1}`,
-    createdAt: new Date(2025, 5, index + 1).toISOString(),
+    createdAt: new Date().toISOString().split('T')[0],
     createdBy: {
       id: index % 5,
       username: `user${index % 5}`,
@@ -124,8 +124,10 @@ let requestForms: any = Array.from({ length: 23 }).map((_, index) => {
       username: "boss",
       role: "hr",
     },
+    status: 'pending'
   };
 });
+
 
 
 // Tạo token giả lập
@@ -261,10 +263,11 @@ export const handlers = [
       name: body.name,
       reason: body.reason,
       createdBy: body.createdBy,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString().split('T')[0],
+      status: body.status
     };
 
-    requestForms.push(newRequest);
+    requestForms.unshift(newRequest);
 
     return res(
       ctx.status(200),
@@ -309,21 +312,21 @@ export const handlers = [
     );
   }),
   rest.get("/request-form", (req, res, ctx) => {
-    const page = Number(req.url.searchParams.get("page") ?? "0");
+    const page = Number(req.url.searchParams.get("page") ?? "1") - 1; // 👈 fix
     const size = Number(req.url.searchParams.get("size") ?? "5");
+
+    const name = req.url.searchParams.get("name")?.toLowerCase() ?? "";
+    const status = req.url.searchParams.get("status")?.toLowerCase() ?? "";
+
+    const filtered = requestForms.filter((form: any) => {
+      const nameMatch = name ? form.name.toLowerCase().includes(name) : true;
+      const statusMatch = status ? form.status?.toLowerCase().includes(status) : true;
+      return nameMatch && statusMatch;
+    });
 
     const start = page * size;
     const end = start + size;
-
-    const pageContent = requestForms.slice(start, end).map((form: any) => ({
-      ...form,
-      // Gán status giả lập nếu chưa có sẵn, có thể random hoặc theo logic nào đó
-      status:
-        form.status ??
-        ["approved", "rejected", "pending"][
-        Math.floor(Math.random() * 3)
-        ],
-    }));
+    const pageContent = filtered.slice(start, end);
 
     return res(
       ctx.status(200),
@@ -332,14 +335,15 @@ export const handlers = [
         traceId: crypto.randomUUID(),
         data: {
           content: pageContent,
-          totalElements: requestForms.length,
-          totalPages: Math.ceil(requestForms.length / size),
-          pageNumber: page,
+          totalElements: filtered.length,
+          totalPages: Math.ceil(filtered.length / size),
+          pageNumber: page + 1, // 👈 trả lại 1-based cho client
           pageSize: size,
         },
       })
     );
   }),
+
 
   rest.get("/request-form/:id", (req, res, ctx) => {
     const { id } = req.params;
@@ -375,12 +379,21 @@ export const handlers = [
   }),
 
   rest.get("/users-list", (req, res, ctx) => {
-    const page = Number(req.url.searchParams.get("page") ?? "0");
+    const page = Number(req.url.searchParams.get("page") ?? "1") - 1; // 👈 fix
     const size = Number(req.url.searchParams.get("size") ?? "5");
+    const fullName = req.url.searchParams.get("fullName")?.toLowerCase() ?? "";
+    const department = req.url.searchParams.get("department")?.toLowerCase() ?? "";
+    const search = req.url.searchParams.get("search")?.toLowerCase() ?? "";
 
-    // Lọc role === 'employee'
+    // Lọc role === 'employee' + tìm kiếm
     const employeeList = users
       .filter((u) => u.role === "employee")
+      .filter((u) => {
+        const nameMatch = fullName ? u.fullName.toLowerCase().includes(fullName) : true;
+        const deptMatch = department ? u.department.toLowerCase().includes(department) : true;
+        const searchMatch = search ? u.fullName.toLowerCase().includes(search) || u.department.toLowerCase().includes(search) : true;
+        return nameMatch && deptMatch && searchMatch;
+      })
       .map((u) => ({
         id: u.id,
         fullName: u.fullName,
@@ -398,10 +411,10 @@ export const handlers = [
         message: "Lấy danh sách employee thành công",
         traceId: crypto.randomUUID(),
         data: {
-          content: employeeList,
+          content: pageContent,
           totalElements: employeeList.length,
           totalPages: Math.ceil(employeeList.length / size),
-          pageNumber: page,
+          pageNumber: page + 1, // 👈 trả lại đúng số trang 1-based
           pageSize: size,
         },
       })
@@ -453,7 +466,7 @@ export const handlers = [
       id: crypto.randomUUID(), // tạo ID ngẫu nhiên
     };
 
-    users.push(newUser);
+    users.unshift(newUser); // 👈 Cho lên đầu danh sách
 
     return res(
       ctx.status(201),
